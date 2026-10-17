@@ -81,6 +81,10 @@ Script này sẽ: ✅ Kiểm tra Python 3.11+ → ✅ Tạo venv `.venv` → ✅
 
 Dấu nhắc đổi thành: `(.venv) D:\SOFT\STV>`
 
+> 📁 Tài liệu khác (`DEPLOYMENT.md`, `PRESENTATION_GUIDE.md`, `workers\vieneu\README.md`)
+> ghi đường dẫn `.venv311\Scripts\python.exe` theo môi trường Python 3.11 lúc kiểm thử gốc.
+> `scripts\setup.bat` tạo `.venv`; hãy thay `.venv311` bằng tên venv của bạn.
+
 ### Bước 4: Kiểm tra
 
 ```batch

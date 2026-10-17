@@ -68,6 +68,9 @@ slidevoice preview --slide 2 out/demo --out out/preview2
 ```
 
 Without editable installation use `python -m slidevoice` instead of `slidevoice`.
+Commands elsewhere in this repository that spell out `.\.venv311\Scripts\python.exe`
+come from the original Python 3.11 validation environment. `scripts\setup.bat`
+creates `.venv`; substitute your own interpreter path for `.venv311`.
 `--out` is the **job directory itself**, not a parent in which another job is created.
 `preview` requires an existing job and creates an isolated one-slide job. `stage`
 runs dependencies through the requested stage; with `--job`, it validates prior
