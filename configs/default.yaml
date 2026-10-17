@@ -1,0 +1,3 @@
+# Overrides to the packaged defaults in slidevoice/configs/default.yaml (§6.1).
+# Real plugins are intentionally not implemented in M0. Use fake.yaml for M0.
+project: {voice_consent: false}

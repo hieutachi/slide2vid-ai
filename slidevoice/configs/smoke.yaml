@@ -1,0 +1,12 @@
+# Fully local synthetic fixture, never a real-voice or ASR quality benchmark.
+project: {voice_consent: true, title: SlideVoice smoke test, author: SlideVoice}
+render: {plugin: fake_render, width: 320, height: 180}
+voice: {plugin: fake_voice}
+llm: {plugin: fake_llm}
+script: {plugin: fake_script}
+normalize: {plugin: fake_normalize}
+tts: {plugin: fake_tts}
+align: {plugin: fake_align}
+subtitle: {plugin: readable_subtitle}
+avatar: {plugin: none}
+compose: {plugin: slide_images, fps: 15, preset: ultrafast}

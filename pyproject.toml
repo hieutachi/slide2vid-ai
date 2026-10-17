@@ -1,0 +1,118 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "slidevoice"
+version = "0.1.0"
+description = "Khung pipeline dạng plugin biến bài thuyết trình thành video hoàn chỉnh (slide -> video + giọng nhân bản + phụ đề + chương + metadata)."
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+license-files = ["LICENSE", "THIRD_PARTY_NOTICES.md"]
+authors = [{ name = "SlideVoice" }]
+keywords = ["tts", "pptx", "video", "subtitles", "pipeline", "plugin"]
+
+# NGUYÊN TẮC (SPEC.md mục 7): lõi chỉ phụ thuộc thư viện nhẹ.
+# Không được thêm torch / TTS / whisper vào đây; model nặng nằm trong workers/.
+dependencies = [
+    "pydantic>=2.7,<3",
+    "typer>=0.12",
+    "pyyaml>=6.0",
+    "httpx>=0.27",
+    "python-pptx>=1.0",
+    "rich>=13.7",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.5",
+    "mypy>=1.10",
+    "build>=1.2",
+]
+
+[project.scripts]
+slidevoice = "slidevoice.cli:main"
+
+# Plugin cài ngoài tự đăng ký qua group này (SPEC.md mục 4.3).
+# Tên entry point bắt buộc dạng "<kind>.<tên_plugin>", value = "module:Class".
+# Ví dụ:  "tts.my_engine" = "my_pkg.my_engine:MyEnginePlugin"
+[project.entry-points."slidevoice.plugins"]
+
+[tool.setuptools.packages.find]
+include = ["slidevoice*"]
+
+[tool.setuptools.package-data]
+slidevoice = ["configs/*.yaml"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+extend-exclude = ["jobs", "out", "workers"]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "UP",  # pyupgrade
+    "SIM", # flake8-simplify
+    "T20", # flake8-print (SPEC.md mục 7: không dùng print)
+    "PTH", # flake8-use-pathlib
+    "RUF",
+]
+ignore = [
+    "E501",  # độ dài dòng do ruff format quản lý
+    "SIM108",
+    "PTH123", # open() vẫn chấp nhận khi đường dẫn đã là Path
+    "RUF012", # mutable class defaults trong pydantic/plugin config
+]
+
+[tool.ruff.lint.per-file-ignores]
+"slidevoice/core/interfaces.py" = ["B024", "B027"] # concrete no-op healthcheck is contractual
+"tests/**" = ["B011"]
+"samples/make_samples.py" = ["T201"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_unreachable = true
+show_error_codes = true
+plugins = ["pydantic.mypy"]
+exclude = ["^build/", "^dist/", "^jobs/", "^out/", "^workers/"]
+mypy_path = "."
+namespace_packages = true
+explicit_package_bases = true
+
+[tool.pydantic-mypy]
+init_forbid_extra = false
+init_typed = true
+warn_required_dynamic_aliases = true
+
+# SPEC.md mục 4 ghi rõ models.py / interfaces.py phải "đúng từng chữ":
+# ở đó `dict` không tham số hoá (extra: dict, config: dict) là CHỦ Ý của hợp đồng,
+# nên tắt riêng disallow_any_generics cho hai file đó thay vì sửa chữ ký.
+[[tool.mypy.overrides]]
+module = ["slidevoice.core.models", "slidevoice.core.interfaces"]
+disallow_any_generics = false
+
+# CLI dùng decorator của typer (untyped theo mypy) -> nới riêng cho cli.
+[[tool.mypy.overrides]]
+module = ["slidevoice.cli"]
+disallow_untyped_decorators = false
+
+[[tool.mypy.overrides]]
+module = ["pptx.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers"
+markers = [
+    "slow: test chạy lâu (video/ffmpeg)",
+    "gpu: cần GPU hoặc worker thật",
+]

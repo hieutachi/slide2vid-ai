@@ -1,0 +1,12 @@
+# Audible English QA using installed Windows speech, not cloned speech.
+project: {voice_consent: true, language: en, title: SlideVoice audible QA, author: SlideVoice}
+render: {plugin: fake_render, width: 1920, height: 1080}
+voice: {plugin: fake_voice}
+llm: {plugin: fake_llm}
+script: {plugin: fake_script}
+normalize: {plugin: fake_normalize}
+tts: {plugin: windows_sapi, voice_name: Microsoft Zira Desktop}
+align: {plugin: fake_align}
+subtitle: {plugin: fake_subtitle}
+avatar: {plugin: none}
+compose: {plugin: qa_video, background_path: inputs/background.mp4, fps: 30, preset: fast}

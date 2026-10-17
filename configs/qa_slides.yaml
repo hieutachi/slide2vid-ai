@@ -1,0 +1,12 @@
+# Real slide graphics exported by locally installed PowerPoint; English system speech.
+project: {voice_consent: true, language: en, title: SlideVoice slide playback QA, author: SlideVoice}
+render: {plugin: powerpoint, width: 1280, height: 720}
+voice: {plugin: fake_voice}
+llm: {plugin: fake_llm}
+script: {plugin: fake_script}
+normalize: {plugin: fake_normalize}
+tts: {plugin: windows_sapi, voice_name: Microsoft Zira Desktop}
+align: {plugin: fake_align}
+subtitle: {plugin: fake_subtitle}
+avatar: {plugin: none}
+compose: {plugin: slide_images, width: 1280, height: 720, fps: 30, preset: fast}

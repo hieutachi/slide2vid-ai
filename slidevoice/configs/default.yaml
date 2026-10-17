@@ -1,0 +1,20 @@
+project: {language: vi, title: "", author: "", voice_consent: false}
+render: {plugin: libreoffice, width: 1920, height: 1080, skip_hidden: true}
+voice: {plugin: basic, denoise: false, ref_min_sec: 6, ref_max_sec: 15}
+llm:
+  plugin: openai_compat
+  base_url: https://api.openai.com/v1
+  api_key_env: LLM_API_KEY
+  model: "<tên model của nhà cung cấp>"
+  temperature: 0.3
+  timeout_sec: 60
+  max_retries: 3
+script: {plugin: llm_rewrite, style: "thân thiện, rõ ràng", max_words_per_slide: 180, fallback_when_no_notes: llm_from_slide}
+normalize: {plugin: vi_rules}
+tts: {plugin: xtts, worker_url: "http://localhost:8101", speed: 1.0, seed: 42}
+align: {plugin: faster_whisper, worker_url: "http://localhost:8201", model: large-v3, word_level: true}
+qa: {max_cer: 0.15, max_retries: 2, target_lufs: -16}
+timing: {lead_in: 0.5, gap: 0.25, tail: 0.8, empty_slide_duration: 3.0, transition: 0.3}
+subtitle: {plugin: standard, max_chars_per_line: 42, max_lines: 2, burn_in: false}
+avatar: {plugin: none, face_image: null, position: bottom_right, scale: 0.22}
+compose: {plugin: ffmpeg, fps: 30, crf: 20, preset: medium}

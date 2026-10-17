@@ -1,0 +1,12 @@
+include LICENSE THIRD_PARTY_NOTICES.md SECURITY.md CONTRIBUTING.md CHANGELOG.md
+include DEPLOYMENT.md DEPLOYMENT_READINESS.md SPEC.md PRESENTATION_GUIDE.md
+include Dockerfile .dockerignore .gitignore
+recursive-include configs *.yaml
+recursive-include samples *.py *.html *.cjs *.ps1
+recursive-include tests *.py *.json *.srt *.vtt *.ass *.md *.txt *.cjs
+recursive-include workers *.py *.md requirements.txt
+recursive-include .github *.yml
+prune out
+prune models
+prune workers/vieneu/.venv
+global-exclude __pycache__ *.py[cod]

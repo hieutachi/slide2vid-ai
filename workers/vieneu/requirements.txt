@@ -1,0 +1,5 @@
+# Install torch/torchaudio from the official CUDA index FIRST (see README.md).
+vieneu==3.8.3
+transformers==4.57.6
+torch==2.8.0
+torchaudio==2.8.0

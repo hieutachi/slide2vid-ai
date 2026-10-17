@@ -1,0 +1,12 @@
+# Synthetic demonstration only. This explicitly authorizes use of the synthetic sample.
+project: {voice_consent: true, title: SlideVoice M0, author: SlideVoice}
+render: {plugin: fake_render, width: 640, height: 360}
+voice: {plugin: fake_voice}
+llm: {plugin: fake_llm}
+script: {plugin: fake_script}
+normalize: {plugin: fake_normalize}
+tts: {plugin: fake_tts}
+align: {plugin: fake_align}
+subtitle: {plugin: fake_subtitle}
+avatar: {plugin: none}
+compose: {plugin: fake_compose, fps: 15, preset: ultrafast}

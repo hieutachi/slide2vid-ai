@@ -1,0 +1,59 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+.venv311/
+venv/
+workers/**/.venv/
+models/
+
+# Private voice recordings, transcripts, consent records and training checkpoints
+data/private_voice/
+runs/voice_training/
+
+# Tooling caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Job outputs (gói đầu ra của pipeline)
+jobs/
+out/
+work/
+*.mp4
+*.wav
+!samples/*.wav
+
+# Secrets / local overrides
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+configs/local*.yaml
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+
+# User setup / scripts
+scripts/*.ps1
+scripts/*.cmd
+# Generated setup metadata
+workers/vieneu/.env
+workers/vieneu/pinned_models.json
+
+# Build artifacts
+*.whl
+*.tar.gz
+
+# Demo / generated docs
+docs/_build/
+node_modules/

@@ -1,0 +1,75 @@
+name: validation
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  tests:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11', '3.12', '3.13', '3.14']
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Linux media and renderer dependencies
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg libreoffice-impress poppler-utils fonts-noto-core
+      - name: Windows media dependencies
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: choco install ffmpeg --no-progress -y
+      - run: python -m pip install -e ".[dev]"
+      - run: python -m ruff check .
+      - run: python -m ruff format --check .
+      - run: python -m mypy slidevoice
+      - run: python -m pytest -q --junitxml=out/ci-tests.xml
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tests-${{ matrix.os }}-${{ matrix.python }}
+          path: out/ci-tests.xml
+  wheel:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - run: python -m pip install build
+      - run: python -m build
+      - name: Install wheel outside source tree
+        shell: bash
+        run: |
+          python -m venv "$RUNNER_TEMP/wheel-env"
+          "$RUNNER_TEMP/wheel-env/bin/python" -m pip install dist/*.whl
+          cd "$RUNNER_TEMP"
+          "$RUNNER_TEMP/wheel-env/bin/slidevoice" doctor --json-output
+          "$RUNNER_TEMP/wheel-env/bin/slidevoice" smoke --out "$RUNNER_TEMP/wheel-smoke"
+          "$RUNNER_TEMP/wheel-env/bin/slidevoice" resume "$RUNNER_TEMP/wheel-smoke"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: distributions
+          path: dist/*
+  container:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t slidevoice:ci .
+      - run: docker run --rm --network none --read-only --tmpfs /tmp:rw,nosuid,size=512m slidevoice:ci
+      - name: Offline batch and resume on restricted volume
+        run: |
+          docker volume create slidevoice-ci
+          docker run --rm --network none --read-only --cap-drop ALL --security-opt no-new-privileges --memory 2g --cpus 2 --pids-limit 256 --tmpfs /tmp:rw,nosuid,size=512m -v slidevoice-ci:/data slidevoice:ci smoke --out /data/smoke
+          docker run --rm --network none --read-only --cap-drop ALL --security-opt no-new-privileges --tmpfs /tmp:rw,nosuid,size=512m -v slidevoice-ci:/data slidevoice:ci resume /data/smoke
+          docker run --rm --network none --read-only --cap-drop ALL --security-opt no-new-privileges --memory 2g --cpus 2 --pids-limit 256 --tmpfs /tmp:rw,nosuid,size=512m -v slidevoice-ci:/data slidevoice:ci stage render --slides /data/smoke/inputs/slides.pptx --out /data/real-render

@@ -1,0 +1,48 @@
+# PPTX + embedded speaker notes. No personal voice file or training required.
+# Set LLM_API_KEY in the environment. Set model to your provider's model ID.
+project: {voice_consent: true, language: vi, title: "", author: SlideVoice}
+render: {plugin: powerpoint, width: 1920, height: 1080, skip_hidden: true}
+voice: {plugin: preset_voice}
+llm:
+  plugin: openai_compat
+  base_url: https://api.openai.com/v1
+  api_key_env: LLM_API_KEY
+  model: "<model-id>"
+  response_format: json_schema
+  temperature: 0.3
+  timeout_sec: 90
+  max_retries: 2
+script:
+  plugin: lecture_script
+  audience: sinh viên đại học mới học chủ đề này
+  style: giải thích có dẫn dắt, rõ ràng, không đọc nguyên slide
+  max_words_per_slide: 240
+normalize: {plugin: fake_normalize}
+tts:
+  plugin: vieneu
+  worker_url: http://127.0.0.1:8770
+  preset_voice: Mai Anh
+  timeout: 600
+  speed: 1.0
+  seed: 42
+# Existing sidecar fixture only: NOT independent ASR or accurate word alignment.
+align: {plugin: fake_align}
+qa: {max_retries: 0}
+timing: {lead_in: 0.6, gap: 0.3, tail: 1.0}
+# Caption page timing is estimated inside each sentence, not word-level ASR.
+subtitle: {plugin: readable_subtitle, max_chars_per_line: 42, max_lines: 2, burn_in: false}
+avatar: {plugin: none}
+compose:
+  plugin: presenter
+  fps: 30
+  crf: 20
+  preset: fast
+  max_effects_per_slide: 6
+  zoom_max: 1.18
+  zoom_ramp_sec: 0.65
+  zoom_min_sec: 1.2
+  max_zooms_per_slide: 1
+  zoom_cooldown_sec: 2
+  annotation_fade_sec: 0.18
+  reduced_motion: false
+  timeout_sec: 3600

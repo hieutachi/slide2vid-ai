@@ -1,0 +1,20 @@
+# Licensed preset voice only. No reference-voice cloning or training.
+project: {voice_consent: true, language: vi, title: SlideVoice — giọng đọc tiếng Việt, author: SlideVoice}
+render: {plugin: powerpoint, width: 1280, height: 720}
+voice: {plugin: fake_voice}
+llm: {plugin: fake_llm}
+script: {plugin: fake_script}
+normalize: {plugin: fake_normalize}
+tts:
+  plugin: vieneu
+  worker_url: http://127.0.0.1:8770
+  preset_voice: Mai Anh
+  timeout: 600
+  seed: 42
+  speed: 1.0
+# Explicitly synthetic timing/CER: not an independent Vietnamese ASR evaluation.
+align: {plugin: fake_align}
+subtitle: {plugin: fake_subtitle}
+avatar: {plugin: none}
+compose: {plugin: slide_images, width: 1280, height: 720, fps: 30, preset: fast}
+qa: {max_retries: 0}
