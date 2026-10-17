@@ -1,4 +1,4 @@
-﻿# Agent instructions for SlideVoice
+# Agent instructions for SlideVoice
 
 ## Purpose and truthful scope
 SlideVoice is a local/batch slide-to-video orchestration project, not a production multi-tenant service. Read `README.md`, `SPEC.md`, `SECURITY.md`, `DEPLOYMENT_READINESS.md`, and `THIRD_PARTY_NOTICES.md` before changing architecture, security boundaries, packaging, or deployment claims. Treat executable code and current tests as authoritative over historical reports and aspirational SPEC milestones.

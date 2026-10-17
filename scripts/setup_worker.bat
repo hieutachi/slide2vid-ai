@@ -1,4 +1,4 @@
-﻿@echo off
+@echo off
 title SlideVoice Worker Setup (GPU + VieNeu)
 chcp 65001 >nul
 set WORKER_DIR=workers\vieneu

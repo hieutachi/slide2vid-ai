@@ -69,7 +69,9 @@ cd D:\SOFT\STV
 scripts\setup.bat
 ```
 
-Script này sẽ: ✅ Kiểm tra Python 3.11 → ✅ Tạo venv `.venv` → ✅ Cài `slidevoice` editable → ✅ Cài thư viện cần → ✅ Smoke test
+Script này sẽ: ✅ Kiểm tra Python 3.11+ → ✅ Tạo venv `.venv` → ✅ Cài `slidevoice` editable (`.[dev]`) → ✅ Chạy `slidevoice --help` → ✅ Chạy `slidevoice doctor` (preflight, chỉ để tham khảo)
+
+> ⚠️ `doctor` cần **ffmpeg** và **ffprobe** trên `PATH`. Hai công cụ này phải cài riêng; script setup không cài chúng.
 
 ### Bước 3: Activate venv (mỗi khi dùng)
 
